@@ -38,7 +38,7 @@ def from_celsius(deg, to_unit)
   case to_unit
   when 'K'
     deg + 273.15
-  when'F'
+  when 'F'
     deg.to_f * 9 / 5 + 32
   when 'C'
     deg        
@@ -59,8 +59,3 @@ def to_celsius(deg, from_unit)
     'Bad units'
   end
 end
-
-
-
-# izpolzwane na po malko kod bez da se promenq funcionalnostta
-# izpolzwane na case-when struktura
