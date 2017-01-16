@@ -1,22 +1,35 @@
 class Array
   def fetch_deep(path)
-    a = path.split('.')
-    return self[a[0].to_i] if a.length == 1
+    key, rest_of_path = path.split('.', 2)
+    value = get_value(key)
+    return value if rest_of_path.nil? || value.nil?
+    value.fetch_deep(rest_of_path)
+  end
 
-    self[a[0].to_i].fetch_deep(path[a[0].length + 1..-1])
+  def get_value(key)
+    self[Integer(key)]
+  end
+
+  def reshape(shape)
+    map { |el| el.reshape(shape) }
   end
 end
 
 class Hash
   def fetch_deep(path)
-    a = path.split('.')
-    return self[a[0].to_sym] if a.length == 1
-    self[a[0].to_sym].fetch_deep(path[a[0].length + 1..-1])
+    key, rest_of_path = path.split('.', 2)
+    value = get_value(key)
+    return value if rest_of_path.nil? || value.nil?
+    value.fetch_deep(rest_of_path)
+  end
+
+  def get_value(key)
+    self[key] || self[key.to_sym]
   end
 
   def reshape(shape)
-    shape.each do |index, value|
-      self[index] = self.fetch_deep(value)
-    end
+    shape.map do |k, v|
+      v.is_a?(Hash) ? [k, reshape(v)] : [k, fetch_deep(v)]
+    end.to_h
   end
 end
